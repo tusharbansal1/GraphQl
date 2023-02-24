@@ -1,5 +1,6 @@
 const User = require('../models/user')
 const bcrpt = require("bcrypt")
+const { Error } = require('mongoose')
 
 module.exports = {
     createUser: async args => {
@@ -59,6 +60,40 @@ module.exports = {
             }
         } catch (error) {
             console.log(error)
+            throw error
+        }
+    },
+    updateUser: async args => {
+        try {
+            const { _id, firstName, lastName, number, address, email } = args.user
+            const updateuser = await User.findByIdAndUpdate({ _id: _id },
+                {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    number: number,
+                    address: address
+                }
+            )
+            return `User ${updateuser.id} updated successfully`
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    },
+    deleteUser: async (_id) =>{
+        try {
+            const isUser = await User.findById(_id)
+            if(!isUser){
+                throw new Error("user doesnot exists")
+            }
+            const deleteduser= await User.findByIdAndDelete(_id)
+            return{
+                ...deleteduser._doc,
+                _id:deleteduser._id
+                
+            }
+        } catch (error) {
             throw error
         }
     }

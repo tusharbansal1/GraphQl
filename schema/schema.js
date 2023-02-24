@@ -26,7 +26,9 @@ type User {
     user(_id: String!): User!
 }
   type Mutation{
-    createUser(user:UserType): User
+    createUser(user:UserType): User,
+    updateUser(_id: String, firstName: String, lastName: String, number: String, email: String, address: String): String,
+    deleteUser(_id:String): User
 }
   schema {
     query: RootQuery
