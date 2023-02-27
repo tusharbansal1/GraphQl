@@ -124,14 +124,34 @@ module.exports = {
                     email: email,
                     number: number,
                     address: address
-                }
+                },
+                {new :true}
             )
-            return `User ${updateuser.id} updated successfully`
+            return {
+                ...updateuser._doc,
+            }
         } catch (error) {
             console.log(error)
             throw error
         }
     },
+
+    updatePost: async args => {
+        try {
+            const { _id, body } = args.post
+            const updatepost = await Post.findByIdAndUpdate({ _id: _id }, {
+                body: body
+            },{new :true})
+            return{
+                ...updatepost._doc
+            }
+
+        } catch (error) {
+            throw error
+        }
+
+    },
+
     deleteUser: async (_id) => {
         try {
             const isUser = await User.findById(_id)

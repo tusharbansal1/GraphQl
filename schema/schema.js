@@ -14,12 +14,13 @@ type User {
     updatedAt: String!
   }
   input UserType {
+    _id: String!
     firstName: String!
     lastName: String!
     number: String!
     email: String!
     address: String!
-    password:String!
+    password:String
   }
   type Post{
     _id:ID!
@@ -28,6 +29,7 @@ type User {
   }
 
   input PostType{
+    _id:String!
     body:String!
   }
 
@@ -39,10 +41,11 @@ type User {
 }
   type Mutation{
     createUser(user:UserType): User,
-    updateUser(_id: String, firstName: String, lastName: String, number: String, email: String, address: String): String,
+    updateUser(user:UserType): User,
     deleteUser(_id:String): User,
     createPost(post:PostType):Post,
-    deletePost(_id:String):Post
+    deletePost(_id:String):Post,
+    updatePost(post:PostType):Post
 }
   schema {
     query: RootQuery
