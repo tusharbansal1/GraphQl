@@ -1,6 +1,8 @@
 const User = require('../models/user')
+const Post = require('../models/post')
 const bcrpt = require("bcrypt")
 const { Error } = require('mongoose')
+const post = require('../models/post')
 
 module.exports = {
     createUser: async args => {
@@ -25,6 +27,41 @@ module.exports = {
         } catch (error) {
             throw error
         }
+    },
+
+    createPost: async args => {
+        try {
+            const { body } = args.post
+            const post = new Post({
+                body
+            })
+            const newPost = await post.save()
+            return {
+                ...newPost._doc, _id: newPost._id
+            }
+
+        } catch (error) {
+            throw error
+        }
+
+    },
+
+    posts: async () => {
+        try {
+            const posts = await Post.find()
+            return posts.map(post => {
+                return {
+                    ...post._doc,
+                    body: post.body,
+                    createdAt: new Date(post._doc.createdAt).toISOString(),
+                }
+            })
+
+        }
+        catch (error) {
+            throw error
+        }
+
     },
 
     users: async () => {
@@ -63,6 +100,20 @@ module.exports = {
             throw error
         }
     },
+
+    post: async (_id) => {
+        try {
+            const post = await Post.findById(_id)
+            return {
+                body: post.body
+            }
+
+        } catch (error) {
+            throw error
+        }
+
+    },
+
     updateUser: async args => {
         try {
             const { _id, firstName, lastName, number, address, email } = args.user
@@ -81,18 +132,30 @@ module.exports = {
             throw error
         }
     },
-    deleteUser: async (_id) =>{
+    deleteUser: async (_id) => {
         try {
             const isUser = await User.findById(_id)
-            if(!isUser){
+            if (!isUser) {
                 throw new Error("user doesnot exists")
             }
-            const deleteduser= await User.findByIdAndDelete(_id)
-            return{
+            const deleteduser = await User.findByIdAndDelete(_id)
+            return {
                 ...deleteduser._doc,
-                _id:deleteduser._id
-                
+                _id: deleteduser._id
+
             }
+        } catch (error) {
+            throw error
+        }
+    },
+    deletePost: async (_id) => {
+        try {
+            const deletedpost = await Post.findByIdAndDelete(_id)
+            return {
+                ...deletedpost._doc,
+                _id: deletedpost._id
+            }
+
         } catch (error) {
             throw error
         }

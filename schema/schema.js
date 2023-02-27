@@ -21,14 +21,28 @@ type User {
     address: String!
     password:String!
   }
+  type Post{
+    _id:ID!
+    body:String!
+    createdAt:String!
+  }
+
+  input PostType{
+    body:String!
+  }
+
  type RootQuery{
     users: [User!]
     user(_id: String!): User!
+    posts: [Post!]
+    post(_id:String!):Post!
 }
   type Mutation{
     createUser(user:UserType): User,
     updateUser(_id: String, firstName: String, lastName: String, number: String, email: String, address: String): String,
-    deleteUser(_id:String): User
+    deleteUser(_id:String): User,
+    createPost(post:PostType):Post,
+    deletePost(_id:String):Post
 }
   schema {
     query: RootQuery
